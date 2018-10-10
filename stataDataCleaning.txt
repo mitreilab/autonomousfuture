@@ -1,0 +1,142 @@
+clear all
+import delimited BLS/automation_naics-relevant_MERGEDBASE_180123.csv, clear
+
+drop annual
+drop hourly 
+drop occ_group
+drop full_naics
+drop group
+drop tot_emp
+drop a_median
+
+// STANDARDIZE NAMING:
+
+replace occ_title = proper(occ_title)
+replace occ_title_mid = proper(occ_title_mid)
+
+
+// FIX NAMING CONVENTIONS:
+drop occ_title_code // This needs to be repopulated after we fix naming conventions
+
+replace occ_title = substr(occ_title, 1, strlen(occ_title) - 1) if regexm(occ_title, ("\*")) == 1
+
+
+replace occ_title = "Public Relations And Fundraising Managers" if (occ_title == "Public Relations Managers")
+
+replace occ_code = "11-3111" if (occ_code == "11-3041") //Compensation Managers 09-10
+
+replace occ_code = "11-3121" if (occ_code == "11-3049")
+replace occ_title = "Human Resources Managers" if (occ_title == "Human Resources Managers, All Other")
+
+replace occ_code = "11-3131" if (occ_code == "11-3042") //Training And Development Managers 09-10
+
+replace occ_title = "Architectural And Engineering Managers" if (occ_title == "Engineering Managers")
+
+replace occ_title = "Compliance Officers" if (occ_title == "Compliance Officers, Except Agriculture, Construction, Health And Safety, And Transportation")
+
+replace occ_title = "Human Resources Specialists" if (occ_title == "Employment, Recruitment, And Placement Specialists")
+
+replace occ_code = "13-3141" if (occ_code == "13-1072") //Compensation, Benefits, And Job Analysis Specialists 09-10
+
+replace occ_code = "13-1151" if (occ_code == "13-1073") //Training And Development Specialists 09-10
+
+replace occ_title = "Meeting, Convention, And Event Planners" if (occ_title == "Meeting And Convention Planners")
+
+replace occ_title = "Computer And Information Research Scientists" if (occ_title == "Computer And Information Scientists, Research")
+replace occ_code = "15-1111" if (occ_code == "15-1011")
+
+replace occ_code = "15-1131" if (occ_code == "15-1021") //15-1131-Computer Programmers 09-10
+
+replace occ_title = "Software Developers, Applications" if (occ_title == "Computer Software Engineers, Applications")
+replace occ_code = "15-1132" if (occ_code == "15-1031")
+
+replace occ_title = "Software Developers, Systems Software" if (occ_title == "Computer Software Engineers, Systems Software")
+replace occ_code = "15-1133" if (occ_code == "15-1032")
+
+replace occ_title = "Computer Support Specialists" if (occ_title == "Computer User Support Specialists")
+replace occ_title = "Computer Support Specialists" if (occ_title == "Computer Network Support Specialists")
+replace occ_code = "15-115x" if (occ_code == "15-1041")
+replace occ_code = "15-115x" if (occ_code == "15-1151")
+replace occ_code = "15-115x" if (occ_code == "15-1152")
+
+replace occ_code = "15-1121" if (occ_code == "15-1051") //15-1051-Computer Systems Analysts 09-10
+
+replace occ_code = "15-1141" if (occ_code == "15-1061") //Database Administrators 09-10
+
+replace occ_code = "15-1142" if (occ_code == "15-1071") //15-1071-Network And Computer Systems Administrators 09-10
+
+replace occ_title = "Computer Occupations, All Other" if (occ_title == "Computer Specialists, All Other")
+replace occ_code = "15-1199" if (occ_code == "15-1099") //15-1099-Computer Specialists, All Other 09-10
+
+replace occ_title = "Information Security Analysts, Web Developers, And Computer Network Architects" if (occ_title == "Information Security Analysts")
+replace occ_title = "Information Security Analysts, Web Developers, And Computer Network Architects" if (occ_title == "Web Developers")
+replace occ_title = "Information Security Analysts, Web Developers, And Computer Network Architects" if (occ_title == "Network Systems And Data Communications Analysts")
+replace occ_code = "15-1179" if (occ_code == "15-1122")
+replace occ_code = "15-1179" if (occ_code == "15-1134")
+replace occ_code = "15-1179" if (occ_code == "15-1081")
+
+replace occ_title = "Electrical And Electronics Engineering Technicians" if (occ_title == "Electrical And Electronic Engineering Technicians")
+
+replace occ_title = "Market Research Analysts And Marketing Specialists" if (occ_title == "Market Research Analysts")
+replace occ_code = "13-1161" if (occ_code == "19-3021")
+
+replace occ_title = "Multimedia Artists And Animators" if (occ_title == "Multi-Media Artists And Animators")
+
+replace occ_title = "First-Line Supervisors Of Housekeeping And Janitorial Workers" if (occ_title == "First-Line Supervisors/Managers Of Housekeeping And Janitorial Workers")
+
+replace occ_title = "First-Line Supervisors Of Landscaping, Lawn Service, And Groundskeeping Workers" if (occ_title == "First-Line Supervisors/Managers Of Landscaping, Lawn Service, And Groundskeeping Workers")
+
+replace occ_title = "First-Line Supervisors Of Personal Service Workers" if (occ_title == "First-Line Supervisors/Managers Of Personal Service Workers")
+
+replace occ_code = "41-9099" if (occ_code == "41-9799") //41-9799-Sales And Related Workers, All Other 09-10
+
+replace occ_title = "First-Line Supervisors Of Office And Administrative Support Workers" if (occ_title == "First-Line Supervisors/Managers Of Office And Administrative Support Workers")
+
+replace occ_title = "Billing And Posting Clerks" if (occ_title == "Billing And Posting Clerks And Machine Operators")
+
+replace occ_title = "Information And Record Clerks, All Other" if (occ_title == "All Other Information And Record Clerks")
+
+replace occ_title = "Executive Secretaries And Executive Administrative Assistants" if (occ_title == "Executive Secretaries And Administrative Assistants")
+
+replace occ_title = "Secretaries And Administrative Assistants, Except Legal, Medical, And Executive" if (occ_title == "Secretaries, Except Legal, Medical, And Executive")
+
+replace occ_title = "First-Line Supervisors Of Construction Trades And Extraction Workers" if (occ_title == "First-Line Supervisors/Managers Of Mechanics, Installers, And Repairers")
+
+replace occ_title = "First-Line Supervisors Of Mechanics, Installers, And Repairers" if (occ_title == "First-Line Supervisors/Managers Of Mechanics, Installers, And Repairers")
+
+replace occ_title = "Maintenance And Repair Workers, General" if (occ_title == "Maintenance And Repair Workers, General")
+replace occ_code = "49-9071" if (occ_code == "49-9042")
+
+replace occ_title = "First-Line Supervisors Of Production And Operating Workers" if (occ_title == "First-Line Supervisors/Managers Of Production And Operating Workers")
+
+replace occ_title = "First-Line Supervisors Of Helpers, Laborers, And Material Movers, Hand" if (occ_title == "First-Line Supervisors/Managers Of Helpers, Laborers, And Material Movers, Hand")
+
+replace occ_title = "First-Line Supervisors Of Transportation And Material-Moving Machine And Vehicle Operators" if (occ_title == "First-Line Supervisors/Managers Of Transportation And Material-Moving Machine And Vehicle Operators")
+
+replace occ_title = "Heavy And Tractor-Trailer Truck Drivers" if (occ_title == "Truck Drivers, Heavy And Tractor-Trailer")
+
+replace occ_title = "Light Truck Or Delivery Services Drivers" if (occ_title == "Truck Drivers, Light Or Delivery Services")
+
+replace occ_title = "First-Line Supervisors Of Transportation And Material-Moving Machine And Vehicle Operators" if (occ_title == "First-Line Supervisors/Managers Of Transportation And Material-Moving Machine And Vehicle Operators")
+
+
+
+//----------------------------------------------------------------------------//
+
+gen occ_code_title = occ_code + "-" + occ_title
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
